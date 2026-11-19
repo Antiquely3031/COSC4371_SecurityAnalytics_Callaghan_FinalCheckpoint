@@ -6,8 +6,40 @@ Project: #15 Variant (Safe-Guard only)
 
 Defenses:
 
-    
+Two defenses, each tested against every attack in attacks.py. Each defended
+model gets its own threshold, chosen with the same rule as the undefended one
+(lowest threshold with at most 5% of benign validation prompts flagged).
 
+    Defense         Where it acts     What it does
+    normalization   input             cleans every prompt before scoring: drops invisible
+                                      format characters, applies Unicode NFKC, maps
+                                      Cyrillic and Greek look-alikes to Latin, decodes
+                                      embedded Base64; the trained model is unchanged
+    augmentation    training data     retrains a fresh copy of each model on the training
+                                      set plus one obfuscated copy of every injection and
+                                      of an equal number of benign prompts
+                                      (augment() in final_checkpoint.py)
+
+What each defense can and cannot undo:
+
+    Attack family   normalization                    augmentation
+    encoding        undone exactly (text restored)   learned from examples
+    structure       not undone (typos and splits     learned from examples
+                    are not encoding)
+    context         not undone (nothing to decode)   learned from examples
+
+Normalization only reverses changes that have a single correct original. A
+typo or an inserted hyphen has no unique correction, and a role-play frame is
+meaning, not encoding, so those are left to augmentation.
+
+Augmentation uses variant="train" templates for base64, payload_split and
+role_framing, so test-time wrappers stay unseen. The four character-level
+attacks use the same generator in training and test (different random draws),
+so augmentation results for those are a best case.
+
+Limitations: the look-alike table is hand-written and covers common Cyrillic
+and Greek letters only; normalization would also convert genuine Cyrillic or
+Greek text into Latin letters.    
 """
 
 import base64
