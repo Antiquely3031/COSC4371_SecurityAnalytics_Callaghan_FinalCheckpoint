@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+
+# Regenerated on every run (sampled rows with text, for labeling)
+errors_to_label.csv
+
+# Temporary files from Excel and Windows
+~$*
+Thumbs.db
+desktop.ini
