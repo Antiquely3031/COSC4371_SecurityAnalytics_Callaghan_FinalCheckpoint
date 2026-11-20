@@ -112,5 +112,4 @@ scale from logistic regression's probabilities.
 
 ## AI assistance
 
-Code and design choices were developed with assistance from Claude (Anthropic). The full prompts and
-responses are submitted with the report.
+Code and design choices were developed with assistance from Claude (Anthropic). Prompts have been left out for brevity, but are availabe on request.
