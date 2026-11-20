@@ -274,6 +274,10 @@ MODELS = {
 aug_train = augment(train)
 print(f"\nAugmented training set: {len(train)} original + {len(aug_train) - len(train)} obfuscated copies")
 
+aug_leak_test = aug_train["text"].isin(test["text"]).sum()
+aug_leak_val = aug_train["text"].isin(validation["text"]).sum()
+print(f"Augmented leakage: train rows also in test = {aug_leak_test}, also in validation = {aug_leak_val}")
+
 all_tables = []
 for model_name, model in MODELS.items():
     t0 = time.time()
